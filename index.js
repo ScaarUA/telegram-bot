@@ -1,3 +1,4 @@
+import express from 'express';
 import bot from './bot.js';
 import setupMessages from "./messages.js";
 
@@ -9,3 +10,13 @@ const startBot = async () => {
 }
 
 startBot();
+
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('bot running');
+});
+
+app.listen(process.env.PORT || 3001, () => {
+    console.log('Server is running now');
+});
