@@ -1,8 +1,14 @@
 import express from 'express';
 import bot from './bot.js';
 import setupMessages from "./messages.js";
+import config from './config.js';
 
 const startBot = async () => {
+    if (config.isProd) {
+        await bot.setWebHook('tele-bot-0tlo.onrender.com', {
+            certificate: '/crt.pem',
+        });
+    }
     await bot.setMyCommands([{command: '/sosat', description: 'Смактен стикер' }, { command: '/insult', description: 'Оскорбить пайдора'}])
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 

@@ -1,3 +1,6 @@
+const isProd = !!process.env.PRODUCTION;
+
 export default {
-    token: process.env.TELEGRAM_TOKEN,
+    token: isProd ? process.env.TELEGRAM_TOKEN : '6120150005:AAELSeXUse4DHdPN6oql7PnjTRIxD3CIAq0',
+    isProd,
 }
