@@ -5,9 +5,7 @@ import config from './config.js';
 
 const startBot = async () => {
     if (config.isProd) {
-        await bot.setWebHook(`${config.envUrl}:${config.webhookPort}`, {
-            certificate: '/server.crt',
-        });
+        await bot.setWebHook(`${config.envUrl}/bot${config.token}`);
     }
     await bot.setMyCommands([{command: '/sosat', description: 'Смактен стикер' }, { command: '/insult', description: 'Оскорбить пайдора'}])
     const stickerSet = await bot.getStickerSet('GolubZzZi');
@@ -21,6 +19,11 @@ const app = express();
 
 app.get('/', (req, res) => {
     res.send('bot running');
+});
+
+app.post(`/bot${config.token}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
 });
 
 app.get('/health', (req, res) => {
