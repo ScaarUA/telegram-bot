@@ -5,8 +5,8 @@ import config from './config.js';
 
 const startBot = async () => {
     if (config.isProd) {
-        await bot.setWebHook('tele-bot-0tlo.onrender.com', {
-            certificate: '/crt.pem',
+        await bot.setWebHook(`${config.envUrl}:${config.webhookPort}`, {
+            certificate: '/server.crt',
         });
     }
     await bot.setMyCommands([{command: '/sosat', description: 'Смактен стикер' }, { command: '/insult', description: 'Оскорбить пайдора'}])
