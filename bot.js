@@ -7,6 +7,7 @@ const botSettings = config.isProd ? {
         host: config.envUrl,
         key: './key.pem',
         cert: './server.crt',
+        autoOpen: true,
     }
 } : {
     polling: true,
