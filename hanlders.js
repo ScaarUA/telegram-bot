@@ -96,7 +96,11 @@ export const createGifHandler = async (msg, match) => {
     try {
         const res = await makeTenorRequest(prompt);
 
-        bot.sendAnimation(chatId, res.data.results[0].media_formats.gif.url);
+        const results = res.data.results;
+
+        const randomIndex = Math.floor(Math.random() * results.length);
+
+        bot.sendAnimation(chatId, results[randomIndex].media_formats.gif.url);
     } catch (e) {
         bot.sendMessage(chatId, 'Не удалось получить gif\'ку');
     }
