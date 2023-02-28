@@ -2,10 +2,12 @@ import express from 'express';
 import bot from './bot.js';
 import setupMessages from "./messages.js";
 import config from './config.js';
+import { keepAwake } from "./keepAwake.js";
 
 const startBot = async () => {
     if (config.isProd) {
         await bot.setWebHook(`${config.envUrl}/bot${config.token}`);
+        keepAwake();
     }
     await bot.setMyCommands([{command: '/sosat', description: 'Смактен стикер' }, { command: '/insult', description: 'Оскорбить пайдора'}])
     const stickerSet = await bot.getStickerSet('GolubZzZi');

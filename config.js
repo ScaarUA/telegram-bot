@@ -5,4 +5,5 @@ export default {
     isProd,
     envUrl: process.env.ENV_URL,
     webhookPort: process.env.WEBHOOK_PORT,
+    minsToPing: 5,
 }
