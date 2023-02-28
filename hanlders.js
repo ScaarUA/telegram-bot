@@ -1,5 +1,6 @@
 import axios from 'axios';
 import bot from "./bot.js";
+import openai from "./openAi.js";
 
 export const katkuHandler = (game) => async (msg, match) => {
     const chatId = msg.chat.id;
@@ -67,4 +68,21 @@ export const insultHandler = async (msg, match) => {
     const insult = res.data.insult[0].toLowerCase() + res.data.insult.slice(1);
 
     bot.sendMessage(chatId, `${address ? address + ', ' : ''}${insult}`);
+}
+
+export const createImageHandler = async (msg, match) => {
+    const chatId = msg.chat.id;
+
+    const prompt = match[1];
+
+    try {
+        const res = await openai.createImage({
+            prompt,
+            size: '256x256',
+        });
+
+        bot.sendPhoto(chatId, res.data.data[0].url);
+    } catch (e) {
+        bot.sendMessage(chatId, "Не удалось сгенерировать картинку");
+    }
 }

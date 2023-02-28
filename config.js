@@ -6,4 +6,5 @@ export default {
     envUrl: process.env.ENV_URL,
     webhookPort: process.env.WEBHOOK_PORT,
     minsToPing: 5,
+    openaiApiKey: process.env.OPENAI_API_KEY,
 }
