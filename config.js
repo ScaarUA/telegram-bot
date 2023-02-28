@@ -7,4 +7,5 @@ export default {
     webhookPort: process.env.WEBHOOK_PORT,
     minsToPing: 5,
     openaiApiKey: process.env.OPENAI_API_KEY,
+    tenorApiKey: process.env.TENOR_API_KEY,
 }

@@ -1,5 +1,5 @@
 import bot from "./bot.js";
-import {katkuHandler, smac10Handler, insultHandler, createImageHandler} from "./hanlders.js";
+import {katkuHandler, smac10Handler, insultHandler, createImageHandler, createGifHandler} from "./hanlders.js";
 
 const setupMessages = (stickerSet) => {
     bot.onText(/\/sosat/, smac10Handler(stickerSet));
@@ -17,6 +17,8 @@ const setupMessages = (stickerSet) => {
     bot.onText(/\/insult ?(.*)?/, insultHandler);
 
     bot.onText(/\/image (.*)/, createImageHandler);
+
+    bot.onText(/\/gif (.*)/, createGifHandler);
 }
 
 export default setupMessages;

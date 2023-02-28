@@ -1,6 +1,7 @@
 import axios from 'axios';
 import bot from "./bot.js";
 import openai from "./openAi.js";
+import {makeTenorRequest} from "./tenor.js";
 
 export const katkuHandler = (game) => async (msg, match) => {
     const chatId = msg.chat.id;
@@ -84,5 +85,19 @@ export const createImageHandler = async (msg, match) => {
         bot.sendPhoto(chatId, res.data.data[0].url);
     } catch (e) {
         bot.sendMessage(chatId, "Не удалось сгенерировать картинку");
+    }
+}
+
+export const createGifHandler = async (msg, match) => {
+    const chatId = msg.chat.id;
+
+    const prompt = match[1];
+
+    try {
+        const res = await makeTenorRequest(prompt);
+
+        bot.sendAnimation(chatId, res.data.results[0].media_formats.gif.url);
+    } catch (e) {
+        bot.sendMessage(chatId, 'Не удалось получить gif\'ку');
     }
 }

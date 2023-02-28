@@ -9,7 +9,15 @@ const startBot = async () => {
         await bot.setWebHook(`${config.envUrl}/bot${config.token}`);
         keepAwake();
     }
-    await bot.setMyCommands([{command: '/sosat', description: 'Смактен стикер' }, { command: '/insult', description: 'Оскорбить пайдора'}])
+    await bot.setMyCommands([{
+        command: '/sosat', description: 'Смактен стикер'
+    }, {
+        command: '/insult', description: 'Оскорбить пайдора'
+    }, {
+        command: '/image', description: 'Сгенерировать openAi картинку по тексту'
+    }, {
+        command: '/gif', description: 'Найти гифку',
+    }])
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 
     setupMessages(stickerSet);
