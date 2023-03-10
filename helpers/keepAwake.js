@@ -1,5 +1,5 @@
 import https from "https";
-import config from "./config.js";
+import config from "../config.js";
 
 export const keepAwake = () => {
     setInterval(() => {

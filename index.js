@@ -4,7 +4,7 @@ import express from 'express';
 import bot from './bot.js';
 import setupMessages from "./messages.js";
 import config from './config.js';
-import { keepAwake } from "./keepAwake.js";
+import { keepAwake } from "./helpers/keepAwake.js";
 
 const startBot = async () => {
     if (config.isProd) {
