@@ -17,7 +17,9 @@ const startBot = async () => {
         command: '/image', description: 'Сгенерировать openAi картинку по тексту'
     }, {
         command: '/gif', description: 'Найти гифку',
-    }])
+    }, {
+        command: '/katku', description: 'Голосовалка для игр',
+    }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 
     setupMessages(stickerSet);

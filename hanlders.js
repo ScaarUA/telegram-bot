@@ -2,53 +2,69 @@ import axios from 'axios';
 import bot from "./bot.js";
 import openai from "./openAi.js";
 import {makeTenorRequest} from "./tenor.js";
+import {getLeftTime} from "./helpers.js";
 
-export const katkuHandler = (game) => async (msg, match) => {
+export const katkuHandler = async (msg) => {
     const chatId = msg.chat.id;
 
-    const time = match[1];
-    const duration = match[2]?.trim();
+    const gameQuestionMessage = await bot.sendMessage(chatId, 'Укажи название игры', { reply_to_message_id: msg.message_id });
 
-    if (!time || !time.match(/^\d\d?[:\-\s]\d\d$/)) {
-        return bot.sendMessage(chatId, 'Ты шо даун? укажи нормально время. /katku csgo 21:30, например');
-    }
+    const replyGameId = bot.onReplyToMessage(chatId, gameQuestionMessage.message_id, async (replyGameMsg) => {
+        bot.removeReplyListener(replyGameId)
 
-    const pollMsg = await bot.sendPoll(chatId,`Сегодня граем ${game} в ${time}?`, ['Да', 'Позже буду', 'Я пайдор'] , { is_anonymous: false });
+        const game = replyGameMsg.text;
 
-    let timer = Number(duration) || 60;
+        const timeQuestionMessage = await bot.sendMessage(chatId, 'В котором часу?', { reply_to_message_id: gameQuestionMessage.message_id });
 
-    const timerMsg = await bot.sendMessage(chatId, `До конца голосования: ${timer} сек`);
+        const replyTimeId = bot.onReplyToMessage(chatId, timeQuestionMessage.message_id, async (replyTimeMsg) => {
+            bot.removeReplyListener(replyTimeId);
 
-    const interval = setInterval(async () => {
-        timer -=5;
-        bot.editMessageText(`До конца голосования: ${timer} сек`, { message_id: timerMsg.message_id, chat_id: chatId });
+            const time = replyTimeMsg.text;
 
-        if (timer <= 0) {
-            clearInterval(interval);
-
-            const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
-            const yesAmount = stoppedPollMsg.options[0].voter_count;
-            const laterAmount = stoppedPollMsg.options[1].voter_count;
-            const noAmount = stoppedPollMsg.options[2].voter_count;
-            let yesMessage = `Есть бойцы для катки: ${yesAmount}`;
-            let laterMessage = 'Никого на позже нету';
-            let noMessage;
-
-            if (yesAmount < 3) {
-                yesMessage = `К сожалению, не хватает бойцов. На ${time} их только ${yesAmount}`;
+            if (!time || !time.match(/^\d\d?[:\-\s]\d\d$/)) {
+                return bot.sendMessage(chatId, 'Ты шо даун? укажи нормально время. 21:30, например');
             }
 
-            if (laterAmount > 0) {
-                laterMessage = `Позже смогут подключиться бойцов: ${laterAmount}`;
-            }
+            const [hours, minutes] = time.split(':');
+            const targetDate = new Date().setHours(hours, minutes);
 
-            if (noAmount > 0) {
-                noMessage = `Кстати среди нас есть пайдоры`;
-            }
+            const pollMsg = await bot.sendPoll(chatId,`Сегодня граем ${game} в ${time}?`, ['Да', 'Позже буду', 'Я пайдор'] , { is_anonymous: false });
 
-            bot.sendMessage(chatId, `${yesMessage}\n${laterMessage}${noMessage ? `\n${noMessage}` : ''}`);
-        }
-    }, 5000);
+            const timerMsg = await bot.sendMessage(chatId, `До конца голосования: ${getLeftTime(targetDate).text}`);
+
+            const interval = setInterval(async () => {
+                const { timer, text: leftTimeText } = getLeftTime(targetDate);
+
+                bot.editMessageText(`До конца голосования: ${leftTimeText}`, { message_id: timerMsg.message_id, chat_id: chatId });
+
+                if (timer <= 0) {
+                    clearInterval(interval);
+
+                    const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
+                    const yesAmount = stoppedPollMsg.options[0].voter_count;
+                    const laterAmount = stoppedPollMsg.options[1].voter_count;
+                    const noAmount = stoppedPollMsg.options[2].voter_count;
+                    let yesMessage = `Есть бойцы для катки: ${yesAmount}`;
+                    let laterMessage = 'Никого на позже нету';
+                    let noMessage;
+
+                    if (yesAmount < 3) {
+                        yesMessage = `К сожалению, не хватает бойцов. На ${time} их только ${yesAmount}`;
+                    }
+
+                    if (laterAmount > 0) {
+                        laterMessage = `Позже смогут подключиться бойцов: ${laterAmount}`;
+                    }
+
+                    if (noAmount > 0) {
+                        noMessage = `Кстати среди нас есть пайдоры`;
+                    }
+
+                    bot.sendMessage(chatId, `${yesMessage}\n${laterMessage}${noMessage ? `\n${noMessage}` : ''}`);
+                }
+            }, 5000);
+        });
+    });
 }
 
 export const smac10Handler = stickerSet => msg => {
