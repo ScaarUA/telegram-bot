@@ -1,3 +1,5 @@
+process.env.TZ = 'Europe/Kiev';
+
 import express from 'express';
 import bot from './bot.js';
 import setupMessages from "./messages.js";
