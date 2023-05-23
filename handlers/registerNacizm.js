@@ -13,6 +13,7 @@ export const registerNacizmHandler = async (msg) => {
 
     const rule = new schedule.RecurrenceRule();
     rule.hour = 21;
+    rule.minute = 10;
     rule.tz = 'Europe/Kiev';
 
     job = schedule.scheduleJob(rule, async () => {
