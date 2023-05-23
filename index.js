@@ -21,6 +21,10 @@ const startBot = async () => {
         command: '/gif', description: 'Найти гифку',
     }, {
         command: '/katku', description: 'Голосовалка для игр',
+    }, {
+        command: '/register_nacizm', description: 'Бот нацист',
+    }, {
+        command: '/cancel_nacizm', description: 'Бот бандера',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 
