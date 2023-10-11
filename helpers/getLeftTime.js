@@ -9,6 +9,6 @@ export const getLeftTime = (targetDate) => {
 
     return {
         timer,
-        text: `${leftHours}ч. ${leftMinutes}мин. ${leftSeconds}сек.`
+        text: `${leftHours}г. ${leftMinutes}хв. ${leftSeconds}сек.`
     };
 }
