@@ -16,15 +16,17 @@ const startBot = async () => {
     }, {
         command: '/insult', description: 'Оскорбить пайдора'
     }, {
-        command: '/image', description: 'Сгенерировать openAi картинку по тексту'
+        command: '/image', description: 'Згенерувати openAi картинку по тексту'
     }, {
-        command: '/gif', description: 'Найти гифку',
+        command: '/gif', description: 'Знайти гіфку',
     }, {
-        command: '/katku', description: 'Голосовалка для игр',
+        command: '/katku', description: 'Голосувалка для ігор',
     }, {
         command: '/register_nacizm', description: 'Бот нацист',
     }, {
         command: '/cancel_nacizm', description: 'Бот бандера',
+    }, {
+        command: '/mention_all', description: 'Згадати всіх',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 

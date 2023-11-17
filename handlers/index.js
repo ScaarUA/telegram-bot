@@ -4,3 +4,4 @@ export * from './insult.js';
 export * from './katku.js';
 export * from './smac10.js';
 export * from './registerNacizm.js';
+export * from './mentionAllHandler.js';

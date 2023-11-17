@@ -7,12 +7,13 @@ import {
     createGifHandler,
     registerNacizmHandler,
     deregisterNacizmHandler,
+    mentionAllHandler,
 } from "./handlers/index.js";
 
 const setupMessages = (stickerSet) => {
     bot.onText(/\/sosat/, smac10Handler(stickerSet));
 
-    bot.onText(/\/katku/, katkuHandler);
+    bot.onText(/\/katku\s?(\d\d?:\d\d)?\s?(.*)?/, katkuHandler);
 
     bot.onText(/\/insult ?(.*)?/, insultHandler);
 
@@ -23,6 +24,8 @@ const setupMessages = (stickerSet) => {
     bot.onText(/\/register_nacizm/, registerNacizmHandler);
 
     bot.onText(/\/cancel_nacizm/, deregisterNacizmHandler);
+
+    bot.onText(/\/mention_all/, mentionAllHandler)
 }
 
 export default setupMessages;
