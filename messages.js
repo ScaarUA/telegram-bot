@@ -8,6 +8,7 @@ import {
     registerNacizmHandler,
     deregisterNacizmHandler,
     mentionAllHandler,
+    leaderboardHandler,
 } from "./handlers/index.js";
 
 const setupMessages = (stickerSet) => {
@@ -25,7 +26,9 @@ const setupMessages = (stickerSet) => {
 
     bot.onText(/\/cancel_nacizm/, deregisterNacizmHandler);
 
-    bot.onText(/\/mention_all/, mentionAllHandler)
+    bot.onText(/\/mention_all/, mentionAllHandler);
+
+    bot.onText(/\/leaderboard/, leaderboardHandler);
 }
 
 export default setupMessages;

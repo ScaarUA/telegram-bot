@@ -14,5 +14,8 @@ export default {
     { id: 442098861, name: "Ivan" },
     { id: 96716911, name: "Roman" },
     { id: 494642016, name: "Andrii" },
-    { nickname: "@SpokKirk" }]
+    { nickname: "@SpokKirk" }],
+  leetify: {
+    clubId: '07f94376-e2c9-4eca-989e-edad2602a97a'
+  }
 };

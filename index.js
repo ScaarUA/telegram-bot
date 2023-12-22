@@ -27,6 +27,8 @@ const startBot = async () => {
         command: '/cancel_nacizm', description: 'Бот бандера',
     }, {
         command: '/mention_all', description: 'Згадати всіх',
+    }, {
+        command: '/leaderboard', description: 'Leetify рейтинг цієї групи',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 
