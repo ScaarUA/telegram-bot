@@ -1,12 +1,9 @@
 import bot from "../bot.js";
-import { Leetify } from "../services/leetify.js";
 
-const leetify = new Leetify();
-
-export const leaderboardHandler = async (msg) => {
+export const leaderboardHandler = (leetify) => async (msg) => {
   const chatId = msg.chat.id;
 
-  const rating = await leetify.getClubStats();
+  const rating = await leetify.getClubLeaderboard();
 
   const ratingTexts = rating.map((user, index) => `<code>${index + 1}. ${user.name}</code> <b>${user.leetifyRating * 100}</b>`);
 

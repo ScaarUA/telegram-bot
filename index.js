@@ -29,6 +29,8 @@ const startBot = async () => {
         command: '/mention_all', description: 'Згадати всіх',
     }, {
         command: '/leaderboard', description: 'Leetify рейтинг цієї групи',
+    }, {
+        command: '/recent', description: 'Leetify деталі останньої сесії',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 

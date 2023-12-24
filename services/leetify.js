@@ -22,17 +22,24 @@ export class Leetify {
       .then(response => this.token = response.data.token);
   }
 
-  getClubStats() {
-    return this.fetcher(`https://api.leetify.com/api/dashboard/leaderboard/${config.leetify.clubId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).then(response => response.positions.sort((a,b) => a.rank - b.rank))
+  getClubLeaderboard() {
+    return this.fetcher(`https://api.leetify.com/api/dashboard/leaderboard/${config.leetify.clubId}`)
+      .then(response => response.positions.sort((a,b) => a.rank - b.rank));
   }
 
-  async fetcher(url, options, isRetry) {
+  getClubSessions() {
+    return this.fetcher(`https://api.leetify.com/api/sessions/${config.leetify.clubId}`).then(res => res.sessions);
+  }
+
+  async fetcher(url, options = {}, isRetry) {
     try {
-      const res = await axios(url, options);
+      const res = await axios(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${this.token}`
+        }
+      });
 
       return res.data;
     } catch (e) {

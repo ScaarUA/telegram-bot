@@ -9,7 +9,11 @@ import {
     deregisterNacizmHandler,
     mentionAllHandler,
     leaderboardHandler,
+    recentMatchesHandler,
 } from "./handlers/index.js";
+import { Leetify } from "./services/leetify.js";
+
+const leetify = new Leetify();
 
 const setupMessages = (stickerSet) => {
     bot.onText(/\/sosat/, smac10Handler(stickerSet));
@@ -28,7 +32,9 @@ const setupMessages = (stickerSet) => {
 
     bot.onText(/\/mention_all/, mentionAllHandler);
 
-    bot.onText(/\/leaderboard/, leaderboardHandler);
+    bot.onText(/\/leaderboard/, leaderboardHandler(leetify));
+
+    bot.onText(/\/recent/, recentMatchesHandler(leetify));
 }
 
 export default setupMessages;
