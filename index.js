@@ -31,6 +31,8 @@ const startBot = async () => {
         command: '/leaderboard', description: 'Leetify рейтинг цієї групи',
     }, {
         command: '/recent', description: 'Leetify деталі останньої сесії',
+    }, {
+        command: '/check_monitoring', description: 'Leetify перевірити чи працює моніторінг останньої гри',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 

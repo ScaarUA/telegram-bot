@@ -4,6 +4,8 @@ import axios from "axios";
 export class Leetify {
 
   token = null;
+  lastGame = null;
+  chatId = null;
 
   constructor() {
     this.login();
@@ -28,7 +30,17 @@ export class Leetify {
   }
 
   getClubSessions() {
-    return this.fetcher(`https://api.leetify.com/api/sessions/${config.leetify.clubId}`).then(res => res.sessions);
+    return this.fetcher(`https://api.leetify.com/api/sessions/${config.leetify.clubId}`).then(res => {
+      const orderedGamesOfLastSession = res.sessions[0].games.reverse();
+
+      this.lastGame = orderedGamesOfLastSession[0];
+
+      return res.sessions;
+    });
+  }
+
+  setChatId(chatId) {
+    this.chatId = chatId;
   }
 
   async fetcher(url, options = {}, isRetry) {

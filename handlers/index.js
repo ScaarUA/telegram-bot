@@ -7,3 +7,5 @@ export * from './registerNacizm.js';
 export * from './mentionAllHandler.js';
 export * from './leaderboard.js';
 export * from './recentMatches.js';
+export * from './globalListener.js';
+export * from './monitorNewMatches.js';

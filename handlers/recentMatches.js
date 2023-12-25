@@ -1,4 +1,5 @@
 import bot from "../bot.js";
+import { getMatchesText } from "../helpers/getMatchesText.js";
 
 export const recentMatchesHandler = (leetify) => async (msg) => {
   const chatId = msg.chat.id;
@@ -6,18 +7,7 @@ export const recentMatchesHandler = (leetify) => async (msg) => {
   const sessions = await leetify.getClubSessions();
   const lastSession = sessions[0];
 
-  const matchesTexts = lastSession.games.reverse().map((match) => {
-    const date = new Date(match.finishedAt).toLocaleString();
-    const isWin = (match.matchmakingGameStats[0].rank - match.matchmakingGameStats[0].oldRank) > 0;
-    const score1 = isWin ? Math.max(match.teamScores[0], match.teamScores[1]) : Math.min(match.teamScores[0], match.teamScores[1]);
-    const score2 = !isWin ? Math.max(match.teamScores[0], match.teamScores[1]) : Math.min(match.teamScores[0], match.teamScores[1]);
-
-    return `
-<i>${date}</i>
-<a href="https://leetify.com/app/match-details/${match.id}/overview">Посилання на гру</a>
-<b>${match.mapName}</b> ${score1}:${score2} ${isWin ? '👍' : '👎'}
-`
-  });
+  const matchesTexts = getMatchesText(lastSession.games.reverse());
 
   const leetifyOrderedPlayers = lastSession.players.sort((a,b) => b.totalLeetifyRating.value - a.totalLeetifyRating.value);
 
