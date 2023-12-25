@@ -17,5 +17,6 @@ export default {
     { nickname: "@SpokKirk" }],
   leetify: {
     clubId: '07f94376-e2c9-4eca-989e-edad2602a97a'
-  }
+  },
+  chatId: -1001918746746,
 };

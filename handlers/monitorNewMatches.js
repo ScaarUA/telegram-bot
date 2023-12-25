@@ -1,15 +1,16 @@
 import bot from "../bot.js";
 import { getMatchesText } from "../helpers/getMatchesText.js";
+import config from '../config.js';
 
 let isRegistered = false;
 let lastMatch = null;
 
-export const monitorNewMatches = (leetify, chatId) => {
+export const monitorNewMatches = (leetify) => {
   if (isRegistered) {
     return;
   }
 
-  bot.sendMessage(chatId, `Ініціалізуюсь. Chat ID: __${chatId}__`);
+  bot.sendMessage(config.chatId, `Ініціалізуюсь. Chat ID: ${config.chatId}`);
 
   isRegistered = true;
 
@@ -25,7 +26,7 @@ export const monitorNewMatches = (leetify, chatId) => {
 
     const matchText = getMatchesText([newLastMatch]);
 
-    bot.sendMessage(chatId, matchText[0], { parse_mode: 'html' });
+    bot.sendMessage(config.chatId, matchText[0], { parse_mode: 'html' });
   },60 * 2 * 1000);
 }
 

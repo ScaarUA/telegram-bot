@@ -10,15 +10,14 @@ import {
     mentionAllHandler,
     leaderboardHandler,
     recentMatchesHandler,
-    globalListener,
     isMonitoringRegistered,
+    monitorNewMatches,
 } from "./handlers/index.js";
 import { Leetify } from "./services/leetify.js";
 
 const leetify = new Leetify();
 
 const setupMessages = (stickerSet) => {
-    bot.onText(/.*/, globalListener(leetify));
 
     bot.onText(/\/sosat/, smac10Handler(stickerSet));
 
@@ -39,6 +38,8 @@ const setupMessages = (stickerSet) => {
     bot.onText(/\/leaderboard/, leaderboardHandler(leetify));
 
     bot.onText(/\/recent/, recentMatchesHandler(leetify));
+
+    monitorNewMatches(leetify);
 
     bot.onText(/\/check_monitoring/, isMonitoringRegistered);
 }
