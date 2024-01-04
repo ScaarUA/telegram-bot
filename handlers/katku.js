@@ -36,7 +36,7 @@ const handleVote = async (chatId, time, extraMessage) => {
 
     const timerMsg = await bot.sendMessage(chatId, `До кінця голосування: ${getLeftTime(targetDate).text}`);
 
-    bot.sendMessage(chatId, getMentionsString(), { parse_mode: 'markdown'});
+    bot.sendMessage(chatId, await getMentionsString(), { parse_mode: 'markdown'});
 
     const interval = setInterval(async () => {
         const { timer, text: leftTimeText } = getLeftTime(targetDate);

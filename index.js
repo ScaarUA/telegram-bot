@@ -1,3 +1,5 @@
+import { connectDb } from "./db/mongo.js";
+
 process.env.TZ = 'Europe/Kiev';
 
 import express from 'express';
@@ -38,8 +40,9 @@ const startBot = async () => {
 
     setupMessages(stickerSet);
 }
-
-startBot();
+connectDb().then(async () => {
+    startBot();
+});
 
 const app = express();
 

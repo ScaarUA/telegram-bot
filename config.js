@@ -8,13 +8,6 @@ export default {
   minsToPing: 5,
   openaiApiKey: process.env.OPENAI_API_KEY,
   tenorApiKey: process.env.TENOR_API_KEY,
-  nativeUsers: [
-    { id: 419869301, name: "Scaar" },
-    { id: 699419584, name: "Yarish" },
-    { id: 442098861, name: "Ivan" },
-    { id: 96716911, name: "Roman" },
-    { id: 494642016, name: "Andrii" },
-    { nickname: "@SpokKirk" }],
   leetify: {
     clubId: '07f94376-e2c9-4eca-989e-edad2602a97a'
   },
