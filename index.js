@@ -7,6 +7,13 @@ import bot from './bot.js';
 import setupMessages from "./messages.js";
 import config from './config.js';
 import { keepAwake } from "./helpers/keepAwake.js";
+import api from './api/index.js';
+import * as path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const startBot = async () => {
     if (config.isProd) {
@@ -60,6 +67,14 @@ app.post(`/bot${config.token}`, (req, res) => {
 app.get('/health', (req, res) => {
     res.sendStatus(200);
 });
+
+app.use('/api', api);
+
+app.get('/app*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './app/build/index.html'));
+});
+
+app.use(express.static(__dirname + '/app/build'));
 
 app.listen(process.env.PORT || 3001, () => {
     console.log('Server is running now');
