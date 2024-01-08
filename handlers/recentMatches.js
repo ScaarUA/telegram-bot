@@ -10,7 +10,7 @@ export const recentMatchesHandler = (leetify) => async (msg) => {
   const sessions = await leetify.getClubSessions();
   const lastSession = sessions[0];
   const orderedGames = lastSession.games.reverse();
-  const firstGame = orderedGames[orderedGames.length - 1];
+  const firstGame = orderedGames[0];
 
   const matchesTexts = getMatchesText(orderedGames);
 
