@@ -1,3 +1,4 @@
+
 export * from './createGif.js';
 export * from './createImage.js';
 export * from './insult.js';
@@ -8,3 +9,4 @@ export * from './mentionAllHandler.js';
 export * from './leaderboard.js';
 export * from './recentMatches.js';
 export * from './monitorNewMatches.js';
+export * from './getWebUrl.js';

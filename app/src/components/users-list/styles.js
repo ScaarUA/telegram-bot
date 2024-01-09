@@ -13,6 +13,13 @@ export const EditIcon = styled(IconButton)`
   color: #2196F3;
 `;
 
+export const CreateIcon = styled(IconButton)`
+  height: 100%;
+  width: 100%;
+  color: #2196F3;
+  border-radius: 0;
+`;
+
 export const CancelIcon = styled(IconButton)`
   position: absolute;
   top: calc(12px + 12px + 40px);

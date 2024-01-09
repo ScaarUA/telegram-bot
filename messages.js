@@ -12,6 +12,7 @@ import {
     recentMatchesHandler,
     isMonitoringRegistered,
     monitorNewMatches,
+    getWebUrl,
 } from "./handlers/index.js";
 import { Leetify } from "./services/leetify.js";
 
@@ -42,6 +43,8 @@ const setupMessages = (stickerSet) => {
     monitorNewMatches(leetify);
 
     bot.onText(/\/check_monitoring/, isMonitoringRegistered);
+
+    bot.onText(/\/web/, getWebUrl);
 }
 
 export default setupMessages;

@@ -18,7 +18,19 @@ usersRouter.put('/:userId', async (req, res) => {
 
   await user.save();
 
-  res.sendStatus(200);
+  res.json(user);
+});
+
+usersRouter.post('/', async (req, res) => {
+  const user = new User({
+    name: req.body.name,
+    nickname: req.body.nickname,
+    tgId: req.body.tgId,
+  });
+
+  await user.save();
+
+  res.json(user);
 });
 
 export default usersRouter;

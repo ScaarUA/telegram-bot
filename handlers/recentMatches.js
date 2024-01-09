@@ -4,13 +4,16 @@ import { getMatchesText } from "../helpers/getMatchesText.js";
 const formatLeetifyRating = (rating) => rating > 0 ? '+' + (rating * 100).toFixed(2) : (rating * 100).toFixed(2);
 const formatEloChange = (eloChange) => eloChange > 0 ? '+' + eloChange : eloChange;
 
+const findFirstGameOfPlayer = (games, player) => {
+  return games.find(game => game.matchmakingGameStats.some(stat => stat.steam64Id === player.steam64Id));
+};
+
 export const recentMatchesHandler = (leetify) => async (msg) => {
   const chatId = msg.chat.id;
 
   const sessions = await leetify.getClubSessions();
   const lastSession = sessions[0];
   const orderedGames = lastSession.games.reverse();
-  const firstGame = orderedGames[0];
 
   const matchesTexts = getMatchesText(orderedGames);
 
@@ -18,7 +21,8 @@ export const recentMatchesHandler = (leetify) => async (msg) => {
 
   const playersTexts = leetifyOrderedPlayers.map((player, index) => {
     const leetifyRating = formatLeetifyRating(player.totalLeetifyRating.value);
-    const firstGamePlayerMatchmakingStats = firstGame.matchmakingGameStats.find(stat => stat.steam64Id === player.steam64Id);
+    const firstGameOfPlayer = findFirstGameOfPlayer(orderedGames, player);
+    const firstGamePlayerMatchmakingStats = firstGameOfPlayer.matchmakingGameStats.find(stat => stat.steam64Id === player.steam64Id);
     const eloChange = formatEloChange(player.rank - firstGamePlayerMatchmakingStats?.oldRank);
 
     const mvpSign = player.awards.toString().includes('mvp') ? '⭐' : '';
@@ -40,10 +44,12 @@ ${index + 1}. <b>${player.name}</b> ${mvpSign}${looserSign} ${leetifyRating} | e
       return bot.sendMessage(chatId, `Немає гравця з таким порядковим номером. Можливі значення 1-${leetifyOrderedPlayers.length}`);
     }
 
-    const firstGamePlayerMatchmakingStats = firstGame.matchmakingGameStats.find(stat => stat.steam64Id === player.steam64Id);
+    const firstGameOfPlayer = findFirstGameOfPlayer(orderedGames, player);
+    const firstGamePlayerMatchmakingStats = firstGameOfPlayer.matchmakingGameStats.find(stat => stat.steam64Id === player.steam64Id);
     const eloChange = formatEloChange(player.rank - firstGamePlayerMatchmakingStats?.oldRank);
+    const gamesWithPlayer = orderedGames.filter(game => game.matchmakingGameStats.some(stat => stat.steam64Id === player.steam64Id));
 
-    const playerGamesStats = orderedGames.map(game => {
+    const playerGamesStats = gamesWithPlayer.map(game => {
       const playerCsStats = game.matchmakingGameStats.find(stat => stat.steam64Id === player.steam64Id);
       const playerLeetifyStats = game.playerStats.find(stat => stat.steam64Id === player.steam64Id);
       const gameEloChange = formatEloChange(playerCsStats.rank - playerCsStats.oldRank);

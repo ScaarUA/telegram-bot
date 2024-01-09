@@ -42,6 +42,8 @@ const startBot = async () => {
         command: '/recent', description: 'Leetify деталі останньої сесії',
     }, {
         command: '/check_monitoring', description: 'Leetify перевірити чи працює моніторінг останньої гри',
+    }, {
+        command: '/web', description: 'Отримати url для web аплікейшну',
     }]);
     const stickerSet = await bot.getStickerSet('GolubZzZi');
 
