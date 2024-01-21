@@ -1,8 +1,7 @@
 import bot from "../bot.js";
 import { getMatchesText } from "../helpers/getMatchesText.js";
+import { formatLeetifyRating, formatEloChange } from "../helpers/formatters.js";
 
-const formatLeetifyRating = (rating) => rating > 0 ? '+' + (rating * 100).toFixed(2) : (rating * 100).toFixed(2);
-const formatEloChange = (eloChange) => eloChange > 0 ? '+' + eloChange : eloChange;
 
 const findFirstGameOfPlayer = (games, player) => {
   return games.find(game => game.matchmakingGameStats.some(stat => stat.steam64Id === player.steam64Id));
