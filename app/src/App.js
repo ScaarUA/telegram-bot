@@ -13,7 +13,7 @@ import BotPage from "./components/bot-page/BotPage";
 function App() {
   return (
     <div>
-      <Router>
+      <Router basename="/app">
         <Header />
         <Container sx={{ mt: 2 }}>
           <Routes>
