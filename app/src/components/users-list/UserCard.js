@@ -3,7 +3,8 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { CancelIcon, EditIcon, StyledCard, CreateIcon } from "./styles";
+import MuiDeleteIcon from '@mui/icons-material/Delete';
+import { CancelIcon, EditIcon, StyledCard, CreateIcon, DeleteIcon } from "./styles";
 import { useState } from "react";
 import api from "../../utils/api";
 
@@ -30,6 +31,12 @@ function UserCard({ user = {}, updateUsers, newUser }) {
     }
 
     setEditMode(!editMode)
+  }
+
+  const onDeleteButtonClick = async () => {
+    await api.delete(`/api/users/${user._id}`);
+
+    await updateUsers();
   }
 
   const renderContent = () => {
@@ -60,6 +67,7 @@ function UserCard({ user = {}, updateUsers, newUser }) {
   return (
     <StyledCard sx={{height: '100%'}}>
       {(!newUser || editMode) && <EditIcon onClick={onEditButtonClick}>{editMode ? <CheckIcon /> : <ModeEditIcon />}</EditIcon>}
+      {(!editMode && !newUser) && <DeleteIcon onClick={onDeleteButtonClick}><MuiDeleteIcon /></DeleteIcon>}
       {editMode && <CancelIcon onClick={() => setEditMode(false)}><CloseIcon /></CancelIcon>}
       <CardContent>
         {renderContent()}

@@ -3,6 +3,18 @@ import { User } from "../../db/schemas/index.js";
 
 const usersRouter = express.Router();
 
+const preventToxicity = (req, res, next) => {
+  const headers = req.headers;
+
+  if (!headers.host || !headers.origin || !headers.referer) {
+    return res.status(400).send(`Пішов нахуй, твій айпі збережено ${req.ip}. Чекай ddos'а підор`);
+  }
+
+  next();
+}
+
+usersRouter.use(preventToxicity);
+
 usersRouter.get('/', async (req, res) => {
   const users = await User.find({}).exec();
 
@@ -31,6 +43,12 @@ usersRouter.post('/', async (req, res) => {
   await user.save();
 
   res.json(user);
+});
+
+usersRouter.delete('/:userId', async (req, res) => {
+  await User.deleteOne({ _id: req.params.userId }).exec();
+
+  res.sendStatus(200);
 });
 
 export default usersRouter;

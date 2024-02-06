@@ -30,7 +30,7 @@ function Header() {
               RUSSOPHOBES
             </Link>
           </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Box>
             <Link to="/users">
               <Button sx={{ color: '#fff' }}>
                 Користувачі

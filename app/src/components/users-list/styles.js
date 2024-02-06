@@ -3,6 +3,7 @@ import { Card, IconButton } from "@mui/material";
 
 export const StyledCard = styled(Card)`
   height: 100%;
+    min-height: 96px;
   position: relative;
 `
 
@@ -25,4 +26,11 @@ export const CancelIcon = styled(IconButton)`
   top: calc(12px + 12px + 40px);
   right: 12px;
   color: #EF5350;
+`;
+
+export const DeleteIcon = styled(IconButton)`
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    color: #EF5350;
 `;
