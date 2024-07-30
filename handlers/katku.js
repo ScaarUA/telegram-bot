@@ -32,7 +32,7 @@ const handleVote = async (chatId, time, extraMessage) => {
     const [hours, minutes] = time.split(':');
     const targetDate = new Date().setHours(hours, minutes);
 
-    const pollMsg = await bot.sendPoll(chatId,`Сьогодні граєм${extraMessage ? ' ' + extraMessage : ''} в ${time}?`, ['Так', 'Можливо', 'Буду пізніше', 'Я хуйня підзалупна'] , { is_anonymous: false });
+    const pollMsg = await bot.sendPoll(chatId,`Сьогодні граєм${extraMessage ? ' ' + extraMessage : ''} в ${time}?`, ['Так', 'Можливо', 'Буду пізніше', 'Я добровільно погоджуюсь служти в ЗСУ'] , { is_anonymous: false });
 
     const timerMsg = await bot.sendMessage(chatId, `До кінця голосування: ${getLeftTime(targetDate).text}`);
 
