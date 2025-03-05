@@ -11,22 +11,12 @@ export const monitorNewMatches = (leetify) => {
     return;
   }
 
-  bot.sendMessage(config.chatId, `Ініціалізуюсь. Chat ID: ${config.chatId}`);
+  bot.sendMessage(
+    config.chatId,
+    `Ініціалізую моніторинг матчів. Chat ID: ${config.chatId}`
+  );
 
   isRegistered = true;
-
-  // const rating = new Rating({
-  //   date: new Date(),
-  //   rating: [{
-  //     user: 'Scaar',
-  //     rank: 3
-  //   }, {
-  //     user: 'Zapadenec',
-  //     rank: 10.2
-  //   }]
-  // });
-  //
-  // rating.save();
 
   setInterval(
     async () => {
@@ -47,7 +37,7 @@ export const monitorNewMatches = (leetify) => {
   );
 };
 
-export const isMonitoringRegistered = (msg) => {
+export const isMatchesMonitoringRegistered = (msg) => {
   const chatId = msg.chat.id;
 
   bot.sendMessage(chatId, isRegistered ? 'Все чікі-пукі' : 'Я відсмоктав');

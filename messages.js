@@ -8,10 +8,12 @@ import {
   mentionAllHandler,
   leaderboardHandler,
   recentMatchesHandler,
-  isMonitoringRegistered,
+  isHighlightsMonitoringRegistered,
   monitorNewMatches,
   getWebUrl,
   createHandler,
+  monitorNewHighlights,
+  isMatchesMonitoringRegistered,
 } from './handlers/index.js';
 import { Leetify } from './services/leetify.js';
 import bot from './bot.js';
@@ -67,10 +69,21 @@ const setupMessages = (stickerSet) => {
 
   monitorNewMatches(leetify);
 
-  createHandler(/\/check_monitoring/, isMonitoringRegistered, {
-    command: '/check_monitoring',
+  monitorNewHighlights(leetify);
+
+  createHandler(/\/check_monitoring_matches/, isMatchesMonitoringRegistered, {
+    command: '/check_monitoring_matches',
     description: 'Leetify перевірити чи працює моніторінг останньої гри',
   });
+
+  createHandler(
+    /\/check_monitoring_highlights/,
+    isHighlightsMonitoringRegistered,
+    {
+      command: '/check_monitoring_highlights',
+      description: 'Leetify перевірити чи працює моніторінг останніх хайлайтів',
+    }
+  );
 
   createHandler(/\/web/, getWebUrl, {
     command: '/web',

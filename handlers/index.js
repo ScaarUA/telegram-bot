@@ -11,6 +11,7 @@ export * from './leaderboard.js';
 export * from './recentMatches.js';
 export * from './monitorNewMatches.js';
 export * from './getWebUrl.js';
+export * from './monitorHighlights.js';
 
 export const createHandler = (pattern, handler, commandDoc) => {
   bot.onText(pattern, handler);

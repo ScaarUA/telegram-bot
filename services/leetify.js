@@ -43,6 +43,12 @@ export class Leetify {
     });
   }
 
+  getClubHighlights() {
+    return this.fetcher(
+      `https://api.leetify.com/api/club/${config.leetify.clubId}/recent-highlights`
+    );
+  }
+
   setChatId(chatId) {
     this.chatId = chatId;
   }
