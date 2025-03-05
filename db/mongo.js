@@ -10,7 +10,7 @@ export async function connectDb() {
   try {
     await mongoose.connect(uri);
 
-    console.log("Successfully connected to db");
+    console.log('Successfully connected to db');
   } catch (e) {
     console.log(e);
   }

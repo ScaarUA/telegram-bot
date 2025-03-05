@@ -1,5 +1,5 @@
-import express from "express";
-import { User } from "../../db/schemas/index.js";
+import express from 'express';
+import { User } from '../../db/schemas/index.js';
 
 const usersRouter = express.Router();
 
@@ -7,11 +7,13 @@ const preventToxicity = (req, res, next) => {
   const headers = req.headers;
 
   if (!headers.host || !headers.origin || !headers.referer) {
-    return res.status(400).send(`Пішов нахуй, твій айпі збережено ${req.ip}. Чекай ddos'а підор`);
+    return res
+      .status(400)
+      .send(`Пішов нахуй, твій айпі збережено ${req.ip}. Чекай ddos'а підор`);
   }
 
   next();
-}
+};
 
 usersRouter.use(preventToxicity);
 

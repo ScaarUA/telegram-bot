@@ -1,6 +1,6 @@
-import express from "express";
-import bot from "../../bot.js";
-import config from "../../config.js";
+import express from 'express';
+import bot from '../../bot.js';
+import config from '../../config.js';
 
 const botRouter = express.Router();
 

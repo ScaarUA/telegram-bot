@@ -1,50 +1,83 @@
-import bot from "./bot.js";
 import {
-    katkuHandler,
-    smac10Handler,
-    insultHandler,
-    createImageHandler,
-    createGifHandler,
-    registerNacizmHandler,
-    deregisterNacizmHandler,
-    mentionAllHandler,
-    leaderboardHandler,
-    recentMatchesHandler,
-    isMonitoringRegistered,
-    monitorNewMatches,
-    getWebUrl,
-} from "./handlers/index.js";
-import { Leetify } from "./services/leetify.js";
+  katkuHandler,
+  smac10Handler,
+  insultHandler,
+  createGifHandler,
+  registerNacizmHandler,
+  deregisterNacizmHandler,
+  mentionAllHandler,
+  leaderboardHandler,
+  recentMatchesHandler,
+  isMonitoringRegistered,
+  monitorNewMatches,
+  getWebUrl,
+  createHandler,
+} from './handlers/index.js';
+import { Leetify } from './services/leetify.js';
+import bot from './bot.js';
+import { commands } from './commandsRegistry.js';
 
 const leetify = new Leetify();
 
 const setupMessages = (stickerSet) => {
+  createHandler(/\/sosat/, smac10Handler(stickerSet), {
+    command: '/sosat',
+    description: 'Смактен стікер',
+  });
 
-    bot.onText(/\/sosat/, smac10Handler(stickerSet));
+  createHandler(/\/katku\s?(\d\d?:\d\d)?\s?(.*)?/, katkuHandler, {
+    command: '/katku',
+    description: 'Голосувалка для ігор',
+  });
 
-    bot.onText(/\/katku\s?(\d\d?:\d\d)?\s?(.*)?/, katkuHandler);
+  createHandler(/\/insult ?(.*)?/, insultHandler, {
+    command: '/insult',
+    description: 'Оскорбить пайдора',
+  });
 
-    bot.onText(/\/insult ?(.*)?/, insultHandler);
+  createHandler(/\/gif (.*)/, createGifHandler, {
+    command: '/gif',
+    description: 'Знайти гіфку',
+  });
 
-    bot.onText(/\/image (.*)/, createImageHandler);
+  createHandler(/\/register_nacizm/, registerNacizmHandler, {
+    command: '/register_nacizm',
+    description: 'Бот нацист',
+  });
 
-    bot.onText(/\/gif (.*)/, createGifHandler);
+  createHandler(/\/cancel_nacizm/, deregisterNacizmHandler, {
+    command: '/cancel_nacizm',
+    description: 'Бот бандера',
+  });
 
-    bot.onText(/\/register_nacizm/, registerNacizmHandler);
+  createHandler(/\/mention_all/, mentionAllHandler, {
+    command: '/mention_all',
+    description: 'Згадати всіх',
+  });
 
-    bot.onText(/\/cancel_nacizm/, deregisterNacizmHandler);
+  createHandler(/\/leaderboard/, leaderboardHandler(leetify), {
+    command: '/leaderboard',
+    description: 'Leetify рейтинг цієї групи',
+  });
 
-    bot.onText(/\/mention_all/, mentionAllHandler);
+  createHandler(/\/recent/, recentMatchesHandler(leetify), {
+    command: '/recent',
+    description: 'Leetify деталі останньої сесії',
+  });
 
-    bot.onText(/\/leaderboard/, leaderboardHandler(leetify));
+  monitorNewMatches(leetify);
 
-    bot.onText(/\/recent/, recentMatchesHandler(leetify));
+  createHandler(/\/check_monitoring/, isMonitoringRegistered, {
+    command: '/check_monitoring',
+    description: 'Leetify перевірити чи працює моніторінг останньої гри',
+  });
 
-    monitorNewMatches(leetify);
+  createHandler(/\/web/, getWebUrl, {
+    command: '/web',
+    description: 'Отримати url для web аплікейшну',
+  });
 
-    bot.onText(/\/check_monitoring/, isMonitoringRegistered);
-
-    bot.onText(/\/web/, getWebUrl);
-}
+  bot.setMyCommands(commands);
+};
 
 export default setupMessages;

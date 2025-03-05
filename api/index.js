@@ -1,7 +1,7 @@
-import express from "express";
-import usersRouter from "./routes/users.js";
-import ratingRouter from "./routes/rating.js";
-import botRouter from "./routes/bot.js";
+import express from 'express';
+import usersRouter from './routes/users.js';
+import ratingRouter from './routes/rating.js';
+import botRouter from './routes/bot.js';
 
 const router = express.Router();
 

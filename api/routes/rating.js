@@ -1,5 +1,5 @@
-import express from "express";
-import { Rating } from "../../db/schemas/index.js";
+import express from 'express';
+import { Rating } from '../../db/schemas/index.js';
 
 const ratingRouter = express.Router();
 

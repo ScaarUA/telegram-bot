@@ -1,23 +1,33 @@
-import { CardContent, Stack, TextField, Typography } from "@mui/material";
+import { CardContent, Stack, TextField, Typography } from '@mui/material';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import MuiDeleteIcon from '@mui/icons-material/Delete';
-import { CancelIcon, EditIcon, StyledCard, CreateIcon, DeleteIcon } from "./styles";
-import { useState } from "react";
-import api from "../../utils/api";
+import {
+  CancelIcon,
+  EditIcon,
+  StyledCard,
+  CreateIcon,
+  DeleteIcon,
+} from './styles';
+import { useState } from 'react';
+import api from '../../utils/api';
 
 function UserCard({ user = {}, updateUsers, newUser }) {
   const [editMode, setEditMode] = useState(false);
-  const [editedUser, setEditedUser] = useState({ name: user.name, nickname: user.nickname, tgId: user.tgId })
+  const [editedUser, setEditedUser] = useState({
+    name: user.name,
+    nickname: user.nickname,
+    tgId: user.tgId,
+  });
 
-  const onUserFieldChange = field => event => {
+  const onUserFieldChange = (field) => (event) => {
     setEditedUser({
       ...editedUser,
       [field]: event.target.value,
     });
-  }
+  };
 
   const onEditButtonClick = async () => {
     if (editMode) {
@@ -30,30 +40,47 @@ function UserCard({ user = {}, updateUsers, newUser }) {
       await updateUsers();
     }
 
-    setEditMode(!editMode)
-  }
+    setEditMode(!editMode);
+  };
 
   const onDeleteButtonClick = async () => {
     await api.delete(`/api/users/${user._id}`);
 
     await updateUsers();
-  }
+  };
 
   const renderContent = () => {
     if (editMode) {
       return (
         <Stack spacing={2} marginRight="40px">
-          <TextField label="Ім'я" placeholder="Ім'я для тэгу, якщо э tg ID" value={editedUser.name} onChange={onUserFieldChange('name')} />
-          <TextField label="Нікнейм" placeholder="Якщо нема tg ID, то потрібен нікнейм" value={editedUser.nickname} onChange={onUserFieldChange('nickname')} />
-          <TextField label="Telegram ID" placeholder="Telegram ID" value={editedUser.tgId} onChange={onUserFieldChange('tgId')} />
+          <TextField
+            label="Ім'я"
+            placeholder="Ім'я для тэгу, якщо э tg ID"
+            value={editedUser.name}
+            onChange={onUserFieldChange('name')}
+          />
+          <TextField
+            label="Нікнейм"
+            placeholder="Якщо нема tg ID, то потрібен нікнейм"
+            value={editedUser.nickname}
+            onChange={onUserFieldChange('nickname')}
+          />
+          <TextField
+            label="Telegram ID"
+            placeholder="Telegram ID"
+            value={editedUser.tgId}
+            onChange={onUserFieldChange('tgId')}
+          />
         </Stack>
       );
     }
 
     if (newUser) {
       return (
-        <CreateIcon size="large" onClick={onEditButtonClick}><AddBoxIcon /></CreateIcon>
-      )
+        <CreateIcon size="large" onClick={onEditButtonClick}>
+          <AddBoxIcon />
+        </CreateIcon>
+      );
     }
 
     return (
@@ -62,16 +89,26 @@ function UserCard({ user = {}, updateUsers, newUser }) {
         {user.tgId && <Typography>{user.tgId}</Typography>}
       </>
     );
-  }
+  };
 
   return (
-    <StyledCard sx={{height: '100%'}}>
-      {(!newUser || editMode) && <EditIcon onClick={onEditButtonClick}>{editMode ? <CheckIcon /> : <ModeEditIcon />}</EditIcon>}
-      {(!editMode && !newUser) && <DeleteIcon onClick={onDeleteButtonClick}><MuiDeleteIcon /></DeleteIcon>}
-      {editMode && <CancelIcon onClick={() => setEditMode(false)}><CloseIcon /></CancelIcon>}
-      <CardContent>
-        {renderContent()}
-      </CardContent>
+    <StyledCard sx={{ height: '100%' }}>
+      {(!newUser || editMode) && (
+        <EditIcon onClick={onEditButtonClick}>
+          {editMode ? <CheckIcon /> : <ModeEditIcon />}
+        </EditIcon>
+      )}
+      {!editMode && !newUser && (
+        <DeleteIcon onClick={onDeleteButtonClick}>
+          <MuiDeleteIcon />
+        </DeleteIcon>
+      )}
+      {editMode && (
+        <CancelIcon onClick={() => setEditMode(false)}>
+          <CloseIcon />
+        </CancelIcon>
+      )}
+      <CardContent>{renderContent()}</CardContent>
     </StyledCard>
   );
 }

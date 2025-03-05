@@ -1,9 +1,9 @@
-import bot from "../bot.js";
+import bot from '../bot.js';
 
-export const smac10Handler = stickerSet => msg => {
-    const chatId = msg.chat.id;
+export const smac10Handler = (stickerSet) => (msg) => {
+  const chatId = msg.chat.id;
 
-    const sticker = stickerSet.stickers.find(sticker => sticker.emoji === '🙏');
+  const sticker = stickerSet.stickers.find((sticker) => sticker.emoji === '🙏');
 
-    bot.sendSticker(chatId, sticker.file_id);
-}
+  bot.sendSticker(chatId, sticker.file_id);
+};
