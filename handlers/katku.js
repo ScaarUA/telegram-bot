@@ -48,6 +48,7 @@ const handleVote = async (chatId, time, extraMessage) => {
     ['Так', 'Можливо', 'Буду пізніше', 'Я добровільно погоджуюсь служти в ЗСУ'],
     { is_anonymous: false }
   );
+  await bot.pinChatMessage(chatId, pollMsg.message_id);
 
   const timerMsg = await bot.sendMessage(
     chatId,
