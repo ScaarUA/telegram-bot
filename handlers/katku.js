@@ -62,6 +62,9 @@ const handleVote = async (chatId, time, extraMessage) => {
   });
 
   const pollHandler = (event) => {
+    if (event.poll_id !== pollMsg.poll.id) {
+      return;
+    }
     const selectedVote = POLL_OPTIONS[event.option_ids[0]];
     const message = selectedVote
       ? `*${event.user.username}* проголосув '${selectedVote}'`
