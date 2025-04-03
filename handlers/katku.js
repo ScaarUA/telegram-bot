@@ -1,6 +1,7 @@
 import bot from '../bot.js';
-import { getLeftTime } from '../helpers/getLeftTime.js';
 import { getMentionsString } from '../helpers/getMentionsString.js';
+import * as schedule from 'node-schedule';
+import { User } from '../db/schemas/index.js';
 
 const POLL_OPTIONS = [
   'Так',
@@ -47,7 +48,7 @@ export const katkuHandler = async (msg, match) => {
 
 const handleVote = async (chatId, time, extraMessage) => {
   const [hours, minutes] = time.split(':');
-  const targetDate = new Date().setHours(hours, minutes);
+  let votes = {};
 
   const pollMsg = await bot.sendPoll(
     chatId,
@@ -61,14 +62,20 @@ const handleVote = async (chatId, time, extraMessage) => {
     parse_mode: 'markdown',
   });
 
-  const pollHandler = (event) => {
+  const pollHandler = async (event) => {
     if (event.poll_id !== pollMsg.poll.id) {
       return;
     }
+
     const selectedVote = POLL_OPTIONS[event.option_ids[0]];
+
+    votes[event.user.id] = event.option_ids[0];
+
+    const gamerName = event.user.username || event.user.first_name;
+    const probabilityMessage = `\nШанс на катку: ${await getGameChance(votes)}`;
     const message = selectedVote
-      ? `*${event.user.username}* проголосував '${selectedVote}'`
-      : `*${event.user.username}* скасував свій вибір`;
+      ? `*${gamerName}* проголосував '${selectedVote}'${probabilityMessage}`
+      : `*${gamerName}* скасував свій вибір${probabilityMessage}`;
 
     bot.sendMessage(chatId, message, {
       reply_to_message_id: pollMsg.message_id,
@@ -78,41 +85,92 @@ const handleVote = async (chatId, time, extraMessage) => {
 
   bot.on('poll_answer', pollHandler);
 
-  const interval = setInterval(async () => {
-    const { timer, text: leftTimeText } = getLeftTime(targetDate);
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = hours;
+  rule.minute = minutes;
+  rule.tz = 'Europe/Kiev';
 
-    if (timer <= 0) {
-      clearInterval(interval);
+  const job = schedule.scheduleJob(rule, async () => {
+    bot.removeListener('poll_answer', pollHandler);
 
-      bot.removeListener('poll_answer', pollHandler);
+    const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
+    const yesAmount = stoppedPollMsg.options[0].voter_count;
+    const maybeAmount = stoppedPollMsg.options[1].voter_count;
+    const laterAmount = stoppedPollMsg.options[2].voter_count;
+    const noAmount = stoppedPollMsg.options[3].voter_count;
+    let yesMessage =
+      yesAmount < 3
+        ? `Нажаль, не вистачає бійців. На ${time} їх тільки ${yesAmount}`
+        : `Є бійці для катуні: ${yesAmount}`;
+    let laterMessage =
+      laterAmount > 0
+        ? `\nПізніше зможуть під'єднатится бійців: ${laterAmount}`
+        : '\nНікого на пізніше нема';
+    let noMessage =
+      noAmount > 0
+        ? `\nНе будуть грати ${noAmount} сволот. Хай горять в пеклі ці підораси.`
+        : '';
+    let maybeMessage =
+      maybeAmount > 0
+        ? `\nЄ ${maybeAmount} невпевнених в собі уєбанів, які можливо будуть грати.`
+        : '\nНемає невпевнених в собі.';
 
-      const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
-      const yesAmount = stoppedPollMsg.options[0].voter_count;
-      const maybeAmount = stoppedPollMsg.options[1].voter_count;
-      const laterAmount = stoppedPollMsg.options[2].voter_count;
-      const noAmount = stoppedPollMsg.options[3].voter_count;
-      let yesMessage =
-        yesAmount < 3
-          ? `Нажаль, не вистачає бійців. На ${time} їх тільки ${yesAmount}`
-          : `Є бійці для катуні: ${yesAmount}`;
-      let laterMessage =
-        laterAmount > 0
-          ? `\nПізніше зможуть під'єднатится бійців: ${laterAmount}`
-          : '\nНікого на пізніше нема';
-      let noMessage =
-        noAmount > 0
-          ? `\nНе будуть грати ${noAmount} сволот. Хай горять в пеклі ці підораси.`
-          : '';
-      let maybeMessage =
-        maybeAmount > 0
-          ? `\nЄ ${maybeAmount} невпевнених в собі уєбанів, які можливо будуть грати.`
-          : 'Немає невпевнених в собі.';
+    bot.sendMessage(
+      chatId,
+      `${yesMessage}${laterMessage}${maybeMessage}${noMessage}`,
+      { reply_to_message_id: pollMsg.message_id }
+    );
+  });
+};
 
-      bot.sendMessage(
-        chatId,
-        `${yesMessage}${laterMessage}${maybeMessage}${noMessage}`,
-        { reply_to_message_id: pollMsg.message_id }
-      );
-    }
-  }, 5000);
+const getGameChance = async (votes) => {
+  const positiveVotes = Object.values(votes).filter(
+    (val) => val === 0 || val === 1
+  );
+
+  switch (positiveVotes.length) {
+    case 5:
+      return '100%';
+    case 4:
+      return '90%';
+    case 3:
+      const users = await User.find({}).exec();
+
+      const mappedUsers = users.map((user, idx) => {
+        let probabilityChange = 0;
+        const name = user.name || user.nickname;
+
+        switch (name) {
+          case '@scaar':
+          case '@andriiVit':
+          case 'Spok':
+            probabilityChange = 10;
+            break;
+          case 'Ivan':
+            probabilityChange = -20;
+            break;
+          case '@yarisheo':
+            probabilityChange = -10;
+            break;
+        }
+
+        return {
+          id: user.tgId,
+          probabilityChange,
+        };
+      });
+
+      const probability = Object.keys(votes).reduce((acc, curr) => {
+        const probabilityChange = mappedUsers.find(
+          (user) =>
+            user.id === Number(curr) && (votes[curr] === 0 || votes[curr] === 1)
+        ).probabilityChange;
+
+        return acc + probabilityChange;
+      }, 50);
+
+      return `${probability}%`;
+    default:
+      return '0%';
+  }
 };
