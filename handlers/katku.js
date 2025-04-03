@@ -67,7 +67,7 @@ const handleVote = async (chatId, time, extraMessage) => {
     }
     const selectedVote = POLL_OPTIONS[event.option_ids[0]];
     const message = selectedVote
-      ? `*${event.user.username}* проголосув '${selectedVote}'`
+      ? `*${event.user.username}* проголосував '${selectedVote}'`
       : `*${event.user.username}* скасував свій вибір`;
 
     bot.sendMessage(chatId, message, {
