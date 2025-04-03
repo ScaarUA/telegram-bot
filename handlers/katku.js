@@ -2,6 +2,13 @@ import bot from '../bot.js';
 import { getLeftTime } from '../helpers/getLeftTime.js';
 import { getMentionsString } from '../helpers/getMentionsString.js';
 
+const POLL_OPTIONS = [
+  'Так',
+  'Можливо',
+  'Буду пізніше',
+  'Я добровільно погоджуюсь служти в ЗСУ',
+];
+
 export const katkuHandler = async (msg, match) => {
   const chatId = msg.chat.id;
 
@@ -45,30 +52,36 @@ const handleVote = async (chatId, time, extraMessage) => {
   const pollMsg = await bot.sendPoll(
     chatId,
     `Сьогодні граєм${extraMessage ? ' ' + extraMessage : ''} в ${time}?`,
-    ['Так', 'Можливо', 'Буду пізніше', 'Я добровільно погоджуюсь служти в ЗСУ'],
+    POLL_OPTIONS,
     { is_anonymous: false }
   );
   await bot.pinChatMessage(chatId, pollMsg.message_id);
-
-  const timerMsg = await bot.sendMessage(
-    chatId,
-    `До кінця голосування: ${getLeftTime(targetDate).text}`
-  );
 
   bot.sendMessage(chatId, await getMentionsString(), {
     parse_mode: 'markdown',
   });
 
+  const pollHandler = (event) => {
+    const selectedVote = POLL_OPTIONS[event.option_ids[0]];
+    const message = selectedVote
+      ? `*${event.user.username}* проголосув '${selectedVote}'`
+      : `*${event.user.username}* скасував свій вибір`;
+
+    bot.sendMessage(chatId, message, {
+      reply_to_message_id: pollMsg.message_id,
+      parse_mode: 'markdown',
+    });
+  };
+
+  bot.on('poll_answer', pollHandler);
+
   const interval = setInterval(async () => {
     const { timer, text: leftTimeText } = getLeftTime(targetDate);
 
-    bot.editMessageText(`До кінця голосування: ${leftTimeText}`, {
-      message_id: timerMsg.message_id,
-      chat_id: chatId,
-    });
-
     if (timer <= 0) {
       clearInterval(interval);
+
+      bot.removeListener('poll_answer', pollHandler);
 
       const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
       const yesAmount = stoppedPollMsg.options[0].voter_count;
