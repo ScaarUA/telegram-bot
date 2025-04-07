@@ -161,9 +161,12 @@ const getGameChance = async (votes) => {
       });
 
       const probability = Object.keys(votes).reduce((acc, curr) => {
+        if (votes[curr] > 1) {
+          return acc;
+        }
+
         const probabilityChange = mappedUsers.find(
-          (user) =>
-            user.id === Number(curr) && (votes[curr] === 0 || votes[curr] === 1)
+          (user) => String(user.id) === curr
         ).probabilityChange;
 
         return acc + probabilityChange;
