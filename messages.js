@@ -14,6 +14,9 @@ import {
   createHandler,
   monitorNewHighlights,
   isMatchesMonitoringRegistered,
+  aiHandler,
+  chatListener,
+  summaryHandler,
 } from './handlers/index.js';
 import { Leetify } from './services/leetify.js';
 import bot from './bot.js';
@@ -89,6 +92,18 @@ const setupMessages = (stickerSet) => {
     command: '/web',
     description: 'Отримати url для web аплікейшну',
   });
+
+  createHandler(/\/ai (.*)/, aiHandler, {
+    command: '/ai',
+    description: 'Чат з AI',
+  });
+
+  createHandler(/\/summary/, summaryHandler, {
+    command: '/summary',
+    description: 'Підсумувати зміст чату',
+  });
+
+  bot.onText(/.*/, chatListener);
 
   bot.setMyCommands(commands);
 };
