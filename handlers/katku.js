@@ -49,6 +49,7 @@ export const katkuHandler = async (msg, match) => {
 const handleVote = async (chatId, time, extraMessage) => {
   const [hours, minutes] = time.split(':');
   let votes = {};
+  let gameChance = '0%';
 
   const pollMsg = await bot.sendPoll(
     chatId,
@@ -70,9 +71,10 @@ const handleVote = async (chatId, time, extraMessage) => {
     const selectedVote = POLL_OPTIONS[event.option_ids[0]];
 
     votes[event.user.id] = event.option_ids[0];
+    gameChance = await getGameChance(votes);
 
     const gamerName = event.user.username || event.user.first_name;
-    const probabilityMessage = `\nШанс на катку: ${await getGameChance(votes)}`;
+    const probabilityMessage = `\nШанс на катку: ${gameChance}`;
     const message = selectedVote
       ? `*${gamerName}* проголосував '${selectedVote}'${probabilityMessage}`
       : `*${gamerName}* скасував свій вибір${probabilityMessage}`;
@@ -98,28 +100,22 @@ const handleVote = async (chatId, time, extraMessage) => {
     const maybeAmount = stoppedPollMsg.options[1].voter_count;
     const laterAmount = stoppedPollMsg.options[2].voter_count;
     const noAmount = stoppedPollMsg.options[3].voter_count;
-    let yesMessage =
-      yesAmount < 3
-        ? `Нажаль, не вистачає бійців. На ${time} їх тільки ${yesAmount}`
-        : `Є бійці для катуні: ${yesAmount}`;
-    let laterMessage =
-      laterAmount > 0
-        ? `\nПізніше зможуть під'єднатится бійців: ${laterAmount}`
-        : '\nНікого на пізніше нема';
-    let noMessage =
-      noAmount > 0
-        ? `\nНе будуть грати ${noAmount} сволот. Хай горять в пеклі ці підораси.`
-        : '';
-    let maybeMessage =
-      maybeAmount > 0
-        ? `\nЄ ${maybeAmount} невпевнених в собі уєбанів, які можливо будуть грати.`
-        : '\nНемає невпевнених в собі.';
+    const totalAmount = yesAmount + maybeAmount + laterAmount + noAmount;
+    const positiveAmount = yesAmount + maybeAmount;
 
-    bot.sendMessage(
-      chatId,
-      `${yesMessage}${laterMessage}${maybeMessage}${noMessage}`,
-      { reply_to_message_id: pollMsg.message_id }
-    );
+    const mainMsg =
+      positiveAmount >= 3
+        ? positiveAmount === 5
+          ? 'Катці бути!'
+          : `Можливо буде катуня`
+        : `Катки скоріше за все не буде. ${maybeAmount > 1 ? 'Може на пізніше час?' : ''}`;
+    const statMsg = `*Проголосувало*: ${totalAmount} (${yesAmount}y, ${maybeAmount}m, ${laterAmount}l, ${noAmount}n)`;
+    const chanceMsg = `*Вірогідність*: ${gameChance}`;
+
+    bot.sendMessage(chatId, `${mainMsg}\n${statMsg}\n${chanceMsg}`, {
+      reply_to_message_id: pollMsg.message_id,
+      parse_mode: 'markdown',
+    });
   });
 };
 
