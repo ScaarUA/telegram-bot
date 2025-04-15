@@ -2,6 +2,7 @@ import bot from '../bot.js';
 import { getMentionsString } from '../helpers/getMentionsString.js';
 import * as schedule from 'node-schedule';
 import { User } from '../db/schemas/index.js';
+import { pollHistory } from '../helpers/history.js';
 
 const POLL_OPTIONS = [
   'Так',
@@ -47,6 +48,8 @@ export const katkuHandler = async (msg, match) => {
 };
 
 const handleVote = async (chatId, time, extraMessage) => {
+  pollHistory.clear();
+
   const [hours, minutes] = time.split(':');
   let votes = {};
   let gameChance = '0%';
@@ -63,6 +66,10 @@ const handleVote = async (chatId, time, extraMessage) => {
     parse_mode: 'markdown',
   });
 
+  pollHistory.add(
+    `Голосування: Чи буде гра в CS2 о ${time}. Варіанти відповідей: ${POLL_OPTIONS.join(', ')}`
+  );
+
   const pollHandler = async (event) => {
     if (event.poll_id !== pollMsg.poll.id) {
       return;
@@ -78,6 +85,8 @@ const handleVote = async (chatId, time, extraMessage) => {
     const message = selectedVote
       ? `*${gamerName}* проголосував '${selectedVote}'${probabilityMessage}`
       : `*${gamerName}* скасував свій вибір${probabilityMessage}`;
+
+    pollHistory.add(message);
 
     bot.sendMessage(chatId, message, {
       reply_to_message_id: pollMsg.message_id,
@@ -116,6 +125,8 @@ const handleVote = async (chatId, time, extraMessage) => {
       reply_to_message_id: pollMsg.message_id,
       parse_mode: 'markdown',
     });
+
+    pollHistory.clear();
   });
 };
 

@@ -8,7 +8,5 @@ export const aiHandler = async (msg, match) => {
 
   const res = await askGoogleGenAi(question);
 
-  console.log(res);
-
   bot.sendMessage(chatId, res);
 };

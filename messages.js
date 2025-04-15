@@ -15,8 +15,10 @@ import {
   monitorNewHighlights,
   isMatchesMonitoringRegistered,
   aiHandler,
-  chatListener,
+  textListener,
   summaryHandler,
+  listeners,
+  pollSummaryHandler,
 } from './handlers/index.js';
 import { Leetify } from './services/leetify.js';
 import bot from './bot.js';
@@ -103,7 +105,12 @@ const setupMessages = (stickerSet) => {
     description: 'Підсумувати зміст чату',
   });
 
-  bot.onText(/.*/, chatListener);
+  createHandler(/\/poll_summary/, pollSummaryHandler, {
+    command: '/poll_summary',
+    description: 'Підсумувати голосування',
+  });
+
+  listeners();
 
   bot.setMyCommands(commands);
 };

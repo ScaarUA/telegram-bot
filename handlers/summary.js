@@ -1,22 +1,34 @@
 import bot from '../bot.js';
-import { makeSummaryOfTheChat } from '../services/googleGenAi.js';
-
-let history = [];
-
-export const chatListener = async (msg) => {
-  if (history.length > 49) {
-    history.shift();
-  }
-
-  history.push(`${msg.from.username}: ${msg.text}`);
-};
+import {
+  makeSummaryOfPoll,
+  makeSummaryOfTheChat,
+} from '../services/googleGenAi.js';
+import { chatHistory, pollHistory } from '../helpers/history.js';
 
 export const summaryHandler = async (msg) => {
   const chatId = msg.chat.id;
+  const history = chatHistory.get();
 
-  const res = await makeSummaryOfTheChat(history);
+  if (history.length > 0) {
+    const res = await makeSummaryOfTheChat(history);
 
-  history = [];
+    chatHistory.clear();
 
-  bot.sendMessage(chatId, res);
+    bot.sendMessage(chatId, res);
+  } else {
+    bot.sendMessage(chatId, 'Нічого нового не обговорювалося');
+  }
+};
+
+export const pollSummaryHandler = async (msg) => {
+  const chatId = msg.chat.id;
+  const history = pollHistory.get();
+
+  if (history.length > 0) {
+    const res = await makeSummaryOfPoll(history);
+
+    bot.sendMessage(chatId, res);
+  } else {
+    bot.sendMessage(chatId, 'Немає активного голосування');
+  }
 };
