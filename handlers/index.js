@@ -1,5 +1,6 @@
 import bot from '../bot.js';
 import { addCommand } from '../commandsRegistry.js';
+import { withErrorHandling } from '../helpers/withErrorHandling.js';
 
 export * from './createGif.js';
 export * from './insult.js';
@@ -17,6 +18,6 @@ export * from './summary.js';
 export * from './listeners.js';
 
 export const createHandler = (pattern, handler, commandDoc) => {
-  bot.onText(pattern, handler);
+  bot.onText(pattern, withErrorHandling(handler));
   addCommand(commandDoc.command, commandDoc.description);
 };

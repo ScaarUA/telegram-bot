@@ -14,9 +14,9 @@ import {
   createHandler,
   monitorNewHighlights,
   isMatchesMonitoringRegistered,
-  aiHandler,
-  textListener,
-  summaryHandler,
+  // aiHandler,
+  // textListener,
+  // summaryHandler,
   listeners,
   pollSummaryHandler,
 } from './handlers/index.js';
@@ -95,15 +95,15 @@ const setupMessages = (stickerSet) => {
     description: 'Отримати url для web аплікейшну',
   });
 
-  createHandler(/\/ai (.*)/, aiHandler, {
-    command: '/ai',
-    description: 'Чат з AI',
-  });
+  // createHandler(/\/ai (.*)/, aiHandler, {
+  //   command: '/ai',
+  //   description: 'Чат з AI',
+  // });
 
-  createHandler(/\/summary/, summaryHandler, {
-    command: '/summary',
-    description: 'Підсумувати зміст чату',
-  });
+  // createHandler(/\/summary/, summaryHandler, {
+  //   command: '/summary',
+  //   description: 'Підсумувати зміст чату',
+  // });
 
   createHandler(/\/poll_summary/, pollSummaryHandler, {
     command: '/poll_summary',

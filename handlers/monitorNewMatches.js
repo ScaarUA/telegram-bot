@@ -1,12 +1,12 @@
 import bot from '../bot.js';
 import { getMatchesText } from '../helpers/getMatchesText.js';
 import config from '../config.js';
-// import { Rating } from "../db/schemas/index.js";
+import { withErrorHandling } from '../helpers/withErrorHandling.js';
 
 let isRegistered = false;
 let lastMatch = null;
 
-export const monitorNewMatches = (leetify) => {
+export const monitorNewMatches = withErrorHandling((leetify) => {
   if (isRegistered) {
     return;
   }
@@ -35,7 +35,7 @@ export const monitorNewMatches = (leetify) => {
     },
     60 * 2 * 1000
   );
-};
+});
 
 export const isMatchesMonitoringRegistered = (msg) => {
   const chatId = msg.chat.id;

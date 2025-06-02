@@ -1,12 +1,11 @@
 import bot from '../bot.js';
-import { getMatchesText } from '../helpers/getMatchesText.js';
 import config from '../config.js';
 import { Highlight } from '../db/schemas/index.js';
-import axios from 'axios';
+import { withErrorHandling } from '../helpers/withErrorHandling.js';
 
 let isRegistered = false;
 
-export const monitorNewHighlights = (leetify) => {
+export const monitorNewHighlights = withErrorHandling((leetify) => {
   if (isRegistered) {
     return;
   }
@@ -49,7 +48,7 @@ export const monitorNewHighlights = (leetify) => {
     },
     60 * 2 * 1000
   );
-};
+});
 
 export const isHighlightsMonitoringRegistered = (msg) => {
   const chatId = msg.chat.id;
