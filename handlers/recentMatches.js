@@ -26,6 +26,10 @@ export const recentMatchesHandler = (leetify) => async (msg) => {
   const playersTexts = leetifyOrderedPlayers.map((player, index) => {
     const leetifyRating = formatLeetifyRating(player.totalLeetifyRating.value);
     const firstGameOfPlayer = findFirstGameOfPlayer(orderedGames, player);
+    if (!firstGameOfPlayer) {
+      return '';
+    }
+
     const firstGamePlayerMatchmakingStats =
       firstGameOfPlayer.matchmakingGameStats.find(
         (stat) => stat.steam64Id === player.steam64Id
@@ -41,6 +45,10 @@ export const recentMatchesHandler = (leetify) => async (msg) => {
 ${index + 1}. <b>${player.name}</b> ${mvpSign}${looserSign} ${leetifyRating} | elo: ${player.rank} (${eloChange})
 `;
   });
+
+  if (!matchesTexts.join('') || !playersTexts.join('')) {
+    throw new Error('Something wrong with leetify data');
+  }
 
   bot.sendMessage(chatId, matchesTexts.join('\n'), {
     parse_mode: 'html',

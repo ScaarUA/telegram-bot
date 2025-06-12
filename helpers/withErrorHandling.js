@@ -1,8 +1,12 @@
+import bot from '../bot.js';
+import config from '../config.js';
+
 export const withErrorHandling = (cb) => {
-  return function (...params) {
+  return async function (...params) {
     try {
-      cb(...params);
+      await cb(...params);
     } catch (e) {
+      bot.sendMessage(config.chatId, 'Uh oh! Something vidsmoktano v API');
       console.error(e);
     }
   };

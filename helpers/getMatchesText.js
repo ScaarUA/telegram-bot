@@ -1,5 +1,9 @@
 export const getMatchesText = (games) => {
   return games.map((match) => {
+    if (!match) {
+      return;
+    }
+
     const date = new Date(match.finishedAt).toLocaleString();
     const isWin =
       match.matchmakingGameStats[0].rank -
