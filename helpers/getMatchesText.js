@@ -25,6 +25,6 @@ export const getMatchesText = (games) => {
   });
 
   } catch (e) {
-    console.log('leetify туйня. апі іншеʼ);
+    console.log('leetify туйня. апі інше');
   }
 };
