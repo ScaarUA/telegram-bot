@@ -1,4 +1,5 @@
 export const getMatchesText = (games) => {
+  try {
   return games.map((match) => {
     if (!match) {
       return;
@@ -22,4 +23,8 @@ export const getMatchesText = (games) => {
 <b>${match.mapName}</b> ${score1}:${score2} ${isWin ? '👍' : '👎'}
 `;
   });
+
+  } catch (e) {
+    console.log('leetify туйня. апі іншеʼ);
+  }
 };
