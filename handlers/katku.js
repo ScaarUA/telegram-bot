@@ -104,27 +104,34 @@ const handleVote = async (chatId, time, extraMessage) => {
   const job = schedule.scheduleJob(rule, async () => {
     bot.removeListener('poll_answer', pollHandler);
 
-    const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
-    const yesAmount = stoppedPollMsg.options[0].voter_count;
-    const maybeAmount = stoppedPollMsg.options[1].voter_count;
-    const laterAmount = stoppedPollMsg.options[2].voter_count;
-    const noAmount = stoppedPollMsg.options[3].voter_count;
-    const totalAmount = yesAmount + maybeAmount + laterAmount + noAmount;
-    const positiveAmount = yesAmount + maybeAmount;
+    try {
+      const stoppedPollMsg = await bot.stopPoll(chatId, pollMsg.message_id);
+      const yesAmount = stoppedPollMsg.options[0].voter_count;
+      const maybeAmount = stoppedPollMsg.options[1].voter_count;
+      const laterAmount = stoppedPollMsg.options[2].voter_count;
+      const noAmount = stoppedPollMsg.options[3].voter_count;
+      const totalAmount = yesAmount + maybeAmount + laterAmount + noAmount;
+      const positiveAmount = yesAmount + maybeAmount;
 
-    const mainMsg =
-      positiveAmount >= 3
-        ? positiveAmount === 5
-          ? 'Катці бути!'
-          : `Можливо буде катуня`
-        : `Катки скоріше за все не буде. ${maybeAmount > 1 ? 'Може на пізніше час?' : ''}`;
-    const statMsg = `*Проголосувало*: ${totalAmount} (${yesAmount}y, ${maybeAmount}m, ${laterAmount}l, ${noAmount}n)`;
-    const chanceMsg = `*Вірогідність*: ${gameChance}`;
+      const mainMsg =
+        positiveAmount >= 3
+          ? positiveAmount === 5
+            ? 'Катці бути!'
+            : `Можливо буде катуня`
+          : `Катки скоріше за все не буде. ${maybeAmount > 1 ? 'Може на пізніше час?' : ''}`;
+      const statMsg = `*Проголосувало*: ${totalAmount} (${yesAmount}y, ${maybeAmount}m, ${laterAmount}l, ${noAmount}n)`;
+      const chanceMsg = `*Вірогідність*: ${gameChance}`;
 
-    bot.sendMessage(chatId, `${mainMsg}\n${statMsg}\n${chanceMsg}`, {
-      reply_to_message_id: pollMsg.message_id,
-      parse_mode: 'markdown',
-    });
+      bot.sendMessage(chatId, `${mainMsg}\n${statMsg}\n${chanceMsg}`, {
+        reply_to_message_id: pollMsg.message_id,
+        parse_mode: 'markdown',
+      });
+    } catch (e) {
+      bot.sendMessage(
+        chatId,
+        'Щось відсмоктало в голосуванні. Перевіряйте результати самостійно.'
+      );
+    }
 
     pollHistory.clear();
   });

@@ -10,11 +10,6 @@ export const monitorNewHighlights = withErrorHandling((leetify) => {
     return;
   }
 
-  bot.sendMessage(
-    config.chatId,
-    `Ініціалізую моніторинг хайлайтів. Chat ID: ${config.chatId}`
-  );
-
   isRegistered = true;
 
   setInterval(

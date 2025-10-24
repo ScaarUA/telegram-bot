@@ -11,19 +11,18 @@ export const monitorNewMatches = withErrorHandling((leetify) => {
     return;
   }
 
-  bot.sendMessage(
-    config.chatId,
-    `Ініціалізую моніторинг матчів. Chat ID: ${config.chatId}`
-  );
-
   isRegistered = true;
 
   setInterval(
     async () => {
       const sessions = await leetify.getClubSessions();
       const newLastMatch = sessions[0].games[0];
+      const timeElapsedSinceMatch =
+        (Date.now() - new Date(newLastMatch.createdAt)) / 1000 / 60 / 60;
 
-      if (lastMatch && lastMatch.id === newLastMatch.id) {
+      const isOld = timeElapsedSinceMatch > 6;
+
+      if ((lastMatch && lastMatch.id === newLastMatch.id) || isOld) {
         return;
       }
 
