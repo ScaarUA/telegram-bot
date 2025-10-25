@@ -136,6 +136,7 @@ const handleVote = async (chatId, time, extraMessage) => {
         reply_to_message_id: pollMsg.message_id,
         parse_mode: 'markdown',
       });
+      bot.unpinChatMessage(chatId, { message_id: pollMsg.message_id });
     } catch (e) {
       bot.sendMessage(
         chatId,
