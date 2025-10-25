@@ -1,6 +1,7 @@
 import bot from '../bot.js';
 import { getMentionsString } from '../helpers/getMentionsString.js';
 import * as schedule from 'node-schedule';
+import moment from 'moment-timezone';
 import { User } from '../db/schemas/index.js';
 import { pollHistory } from '../helpers/history.js';
 
@@ -96,12 +97,21 @@ const handleVote = async (chatId, time, extraMessage) => {
 
   bot.on('poll_answer', pollHandler);
 
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = hours;
-  rule.minute = minutes;
-  rule.tz = 'Europe/Kiev';
+  const now = moment.tz('Europe/Kiev');
+  const targetTime = moment
+    .tz(
+      {
+        day: now.date(),
+        hour: hours,
+        minute: minutes,
+        second: 0,
+        millisecond: 0,
+      },
+      'Europe/Kiev'
+    )
+    .toDate();
 
-  const job = schedule.scheduleJob(rule, async () => {
+  const job = schedule.scheduleJob(targetTime, async () => {
     bot.removeListener('poll_answer', pollHandler);
 
     try {
