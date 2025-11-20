@@ -19,10 +19,12 @@ import {
   // summaryHandler,
   listeners,
   pollSummaryHandler,
+  textListener,
 } from './handlers/index.js';
 import { Leetify } from './services/leetify.js';
 import bot from './bot.js';
 import { commands } from './commandsRegistry.js';
+import { svitloHandler } from './handlers/svitloHandler.js';
 
 const leetify = new Leetify();
 
@@ -93,6 +95,11 @@ const setupMessages = (stickerSet) => {
   createHandler(/\/web/, getWebUrl, {
     command: '/web',
     description: 'Отримати url для web аплікейшну',
+  });
+
+  createHandler(/\/svitlo ?(.*)/, svitloHandler, {
+    command: '/svitlo',
+    description: 'Отримати інфу по світлу',
   });
 
   // createHandler(/\/ai (.*)/, aiHandler, {
