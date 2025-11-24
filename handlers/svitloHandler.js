@@ -5,7 +5,6 @@ export const svitloHandler = async (msg, match) => {
   const chatId = msg.chat.id;
   const matchGroup = match[1];
 
-  console.log(matchGroup);
   const plannedOutages = await getPlannedOutages();
   const groups = Object.keys(plannedOutages);
 

@@ -3,8 +3,6 @@ import {
   smac10Handler,
   insultHandler,
   createGifHandler,
-  registerNacizmHandler,
-  deregisterNacizmHandler,
   mentionAllHandler,
   leaderboardHandler,
   recentMatchesHandler,
@@ -14,12 +12,8 @@ import {
   createHandler,
   monitorNewHighlights,
   isMatchesMonitoringRegistered,
-  // aiHandler,
-  // textListener,
-  // summaryHandler,
   listeners,
   pollSummaryHandler,
-  textListener,
 } from './handlers/index.js';
 import { Leetify } from './services/leetify.js';
 import bot from './bot.js';
@@ -47,16 +41,6 @@ const setupMessages = (stickerSet) => {
   createHandler(/\/gif (.*)/, createGifHandler, {
     command: '/gif',
     description: 'Знайти гіфку',
-  });
-
-  createHandler(/\/register_nacizm/, registerNacizmHandler, {
-    command: '/register_nacizm',
-    description: 'Бот нацист',
-  });
-
-  createHandler(/\/cancel_nacizm/, deregisterNacizmHandler, {
-    command: '/cancel_nacizm',
-    description: 'Бот бандера',
   });
 
   createHandler(/\/mention_all/, mentionAllHandler, {
@@ -101,16 +85,6 @@ const setupMessages = (stickerSet) => {
     command: '/svitlo',
     description: 'Отримати інфу по світлу',
   });
-
-  // createHandler(/\/ai (.*)/, aiHandler, {
-  //   command: '/ai',
-  //   description: 'Чат з AI',
-  // });
-
-  // createHandler(/\/summary/, summaryHandler, {
-  //   command: '/summary',
-  //   description: 'Підсумувати зміст чату',
-  // });
 
   createHandler(/\/poll_summary/, pollSummaryHandler, {
     command: '/poll_summary',

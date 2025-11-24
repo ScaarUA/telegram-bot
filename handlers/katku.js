@@ -146,6 +146,20 @@ const handleVote = async (chatId, time, extraMessage) => {
 
     pollHistory.clear();
   });
+
+  const replyPollMsg = bot.onReplyToMessage(
+    chatId,
+    pollMsg.message_id,
+    async (replyMsg) => {
+      if (replyMsg.text === '/cancel') {
+        bot.removeReplyListener(replyPollMsg);
+        await bot.stopPoll(chatId, pollMsg.message_id);
+        job.cancel();
+        await bot.unpinChatMessage(chatId, { message_id: pollMsg.message_id });
+        await bot.sendMessage(chatId, 'Голосування скасовано. Підараси');
+      }
+    }
+  );
 };
 
 const getGameChance = async (votes) => {
